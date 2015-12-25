@@ -1,9 +1,5 @@
 """
-This package contains classes and utility functions to work with SNMP in Quali shells.
-
-This package assumes that its users are familiar with SNMP basics but are not necessarily
-professionals. Thus the operations and terminology are not always by the book but reflects the
-needs of Quali SNMP users.
+This module contains classes and utility functions to work with SNMP in Quali shells.
 """
 
 from collections import OrderedDict
@@ -12,6 +8,7 @@ from pysnmp.entity.rfc3413.oneliner import cmdgen
 from pysnmp.error import PySnmpError
 from pysnmp.smi import builder, view
 from pysnmp.smi.rfc1902 import ObjectIdentity
+
 
 cmd_gen = cmdgen.CommandGenerator()
 mib_builder = builder.MibBuilder()
@@ -192,7 +189,7 @@ class QualiSnmp(object):
                 # Triple or more index (like IPv4 in IP-Table) - treat as str.
                 index = str(suffix)
             if not oid_2_value.get(index):
-                oid_2_value[index] = {}
+                oid_2_value[index] = {'suffix': str(suffix)}
             oid_2_value[index][mibName] = var_bind[0][1].prettyPrint()
 
         if indexes:

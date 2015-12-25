@@ -6,9 +6,9 @@ from pysnmp.hlapi import UsmUserData, usmHMACSHAAuthProtocol, usmDESPrivProtocol
 from qualisnmp.quali_snmp import QualiSnmp, load_mib
 from qualisnmp.snmp_autoload import AutoLoad
 
-ip = '192.168.42.235'
-ro_community = 'Aa123456'
-rw_community = 'Cisco'
+ip = '172.25.10.204'
+ro_community = 'public'
+rw_community = ''
 v3_user = UsmUserData('QUALI', 'Password1', 'Live4lol', usmHMACSHAAuthProtocol, usmDESPrivProtocol)
 
 
@@ -19,7 +19,7 @@ class SnmpTest(TestCase):
     """
 
     def setUp(self):
-        self.snmp = QualiSnmp(ip=ip, v3_user=v3_user)
+        self.snmp = QualiSnmp(ip=ip, community=ro_community)
 
     def testGet(self):
 
