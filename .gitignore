@@ -1,0 +1,4 @@
+qualisnmp/docs/*
+.project
+.pydevproject
+qualisnmp/.settings/org.eclipse.core.resources.prefs

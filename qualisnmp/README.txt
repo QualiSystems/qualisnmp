@@ -18,12 +18,12 @@ about some entities (for example, sensors) and does not care for some hierarchie
 containers). Autoload cares for the following hierarchy:
 
 chassis
-+-module
-  +-submodule
-    +-port
-  +-port
-+-port
-+-power supply
+	+-module
+		+-submodule
+			+--port
+		+-port
+	+port
+	+power supply
 
 In the context of this module we define the following terms:
 Autolod entity - an entity that should be represented in Quali RM - chassis, module, submodule,

@@ -15,7 +15,7 @@ class AutoLoad(object):
                        "'module'": ["'chassis'"],
                        "'container'": ["'chassis'"],
                        "'chassis'": []}
-    """ dictionary mapping from autload entity to its valid autoload parents. """
+    """ Dictionary mapping from autload entity to its valid autoload parents. """
 
     def __init__(self, ip, port=161, community='private'):
         """ Initialize SNMP environment and read tables.
