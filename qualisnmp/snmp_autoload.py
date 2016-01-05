@@ -3,6 +3,8 @@ This module contains classes and utility functions to implement Quali resource m
 functionality using SNMP.
 """
 
+import re
+
 from quali_snmp import QualiSnmp
 from collections import OrderedDict
 
@@ -59,17 +61,23 @@ class AutoLoad(object):
         return hierarchy
 
     def get_mapping(self):
-        """
+        """ Get mapping from entPhysicalTable to ifTable.
+
+        Build mapping based on entAliasMappingTable if exists else build manually based on
+        entPhysicalDescr <-> ifDescr mapping.
+
         :return: simple mapping from entPhysicalTable index to ifTable index:
         |        {entPhysicalTable index: ifTable index, ...}
-        :todo: add support for modules...
         """
 
         mapping = OrderedDict()
         entAliasMappingTable = self.snmp.walk(('ENTITY-MIB', 'entAliasMappingTable'))
-        for port in self.entPhysicalTable.filter_by_column('Class', "'port'"):
-            mapping[port] = int(entAliasMappingTable[port]
-                                ['entAliasMappingIdentifier'].split('.')[-1])
+        if entAliasMappingTable:
+            for port in self.entPhysicalTable.filter_by_column('Class', "'port'"):
+                entAliasMappingIdentifier = entAliasMappingTable[port]['entAliasMappingIdentifier']
+                mapping[port] = int(entAliasMappingIdentifier.split('.')[-1])
+        else:
+            mapping = self._descr_based_mapping()
 
         return mapping
 
@@ -101,3 +109,21 @@ class AutoLoad(object):
             return parent
         else:
             return self.get_parent(parent)
+
+    def _descr_based_mapping(self):
+        """ Manually calculate mapping from entityTable to ifTable.
+
+        :return: simple mapping from entPhysicalTable index to ifTable index:
+        |        {entPhysicalTable index: ifTable index, ...}
+        """
+
+        mapping = OrderedDict()
+        for port in self.entPhysicalTable.filter_by_column('Class', "'port'").values():
+            entPhysicalDescr = port['entPhysicalDescr']
+            module_index, port_index = re.findall('\d+', entPhysicalDescr)
+            ifTable_re = '.*' + module_index + '/' + port_index
+            for interface in self.ifTable.values():
+                if re.search(ifTable_re, interface['ifDescr']):
+                    mapping[int(port['suffix'])] = int(interface['suffix'])
+                    continue
+        return mapping

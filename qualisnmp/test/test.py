@@ -3,8 +3,8 @@ from unittest import TestCase
 
 from pysnmp.hlapi import UsmUserData, usmHMACSHAAuthProtocol, usmDESPrivProtocol
 
-from qualisnmp.quali_snmp import QualiSnmp, load_mib
-from qualisnmp.snmp_autoload import AutoLoad
+from quali_snmp import QualiSnmp, load_mib
+from snmp_autoload import AutoLoad
 
 ip = '172.25.10.204'
 ro_community = 'public'
@@ -104,13 +104,14 @@ class AutoLoadTest(TestCase):
     def setUp(self):
         self.autoload = AutoLoad(ip=ip, community=ro_community)
 
-    def testAutoload(self):
+    def testAutoload(self):\
+
+        print self.autoload.entPhysicalTable
+        print self.autoload.ifTable
+
         hierarchy = self.autoload.get_hierarchy()
         print hierarchy
         mapping = self.autoload.get_mapping()
         print mapping
-
-        print self.autoload.entPhysicalTable[2]
-        print self.autoload.ifTable[mapping[2]]
 
         pass
